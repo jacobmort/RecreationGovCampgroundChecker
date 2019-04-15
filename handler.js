@@ -50,9 +50,11 @@ const getAvailable = (campground, start, end) => {
 module.exports.availability = async (event) => {
   const openings = await getAvailable(event.campground, event.start, event.end);
   if (openings > 0) {
-    console.log(openings)
     const url = `https://www.recreation.gov/camping/campgrounds/${event.campground}`;
-    await sendEmail(openings, url, date, process.env.FROM_EMAIL, process.env.TO_EMAILS.split(' '));
+    await sendEmail(openings, url, event.start, process.env.FROM_EMAIL, process.env.TO_EMAILS.split(' '));
+    console.log(`found openings for ${event.campground} on ${event.start}`);
+  } else {
+    console.log(`no opening found for ${event.campground} on ${event.start}`);
   }
   // Use this code if you don't use the http event with the LAMBDA-PROXY integration
   // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
